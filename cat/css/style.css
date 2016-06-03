@@ -1,0 +1,13 @@
+svg {
+  background: #fafafa;
+}
+
+html{
+  text-align: center;
+  padding: 30px;
+}
+
+canvas{
+  position: absolute;
+  left: -1000px;
+}

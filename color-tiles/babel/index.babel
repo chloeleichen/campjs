@@ -1,0 +1,100 @@
+Math.seedrandom(0);
+
+const colorCount = 20;
+const alphaValue = 0.57;
+
+let hueValues = new Array(colorCount);
+let saturationValues = new Array(colorCount);
+let brightnessValues = new Array(colorCount);
+
+
+let Color = function(container){
+  this.width = container.node().getBoundingClientRect().width;
+  this.height = container.node().getBoundingClientRect().height;
+  console.log(this.height);
+  
+  this.wrapper = container.append('svg').attr('width', this.width).attr('height', this.height);
+  for(let i = 0; i < colorCount; i ++){
+    if(i % 2 === 0){
+      hueValues[i] = Math.random()*360;
+      saturationValues[i] = Math.random();
+      brightnessValues[i] = Math.random();
+    } else{
+      hueValues[i] = 195;
+      saturationValues[i] = 1;
+      brightnessValues[i] = Math.random();
+    }
+  }
+  this.render();
+}
+
+Color.prototype.render = function(){
+  let width = this.width;
+  let height = this.height;
+  let data = prePareData();
+
+  this.wrapper.selectAll('rect')
+    .data(data)
+    .enter()
+    .append('rect')
+    .attr('x', d=> d.x)
+    .attr('width', d=>d.w)
+    .attr('y', d=> d.y)
+    .attr('height', d=>d.h)
+    .attr('fill', (d, i)=> {
+      let index = i%colorCount;
+      return d3.hsl(hueValues[index],saturationValues[index],brightnessValues[index]);
+    })
+    .attr('fill-opacity', alphaValue)
+    .on('click', function(){});
+  
+  
+  function prePareData(){
+    let rowCount = Math.floor(getRandom(5, 20));
+    let rowHeight = height/rowCount;
+    let data = [];
+    let parts = [];
+    //each line 
+    for(let i = rowCount; i >=0; i --){
+      let partCount = i + 1;
+      let sumPartsNow = 0;
+      let sumPartsTotal = 0;
+
+      for(let ii = 0; ii < partCount; ii ++){
+        //sub or not?
+        if(Math.random() < 0.075){
+          let fragments = Math.floor(getRandom(2, 20));
+          partCount = partCount + fragments;
+          for(let iii = 0; iii < fragments; iii ++){
+           parts.push(getRandom(0, 2));
+          }
+        } else{
+          parts.push(getRandom(2, 20));
+        }
+      }
+  
+      for(let ii = 0; ii < partCount; ii ++){
+        sumPartsTotal += parts[ii];
+      }
+
+      for(let ii = 0; ii < parts.length; ii ++){
+        sumPartsNow += parts[ii];
+        let d = {
+          x: d3.scale.linear().domain([0, sumPartsTotal]).range([0, width])(sumPartsNow) - d3.scale.linear().domain([0, sumPartsTotal]).range([0, width])(parts[ii]),
+          y: rowHeight*i,
+          w: d3.scale.linear().domain([0, sumPartsTotal]).range([0, width])(parts[ii]), 
+          h: rowHeight*1.5
+        }
+        data.push(d)
+      }
+    }
+    return data;
+  }
+};
+
+
+function getRandom(min, max){
+  return Math.random() * (max - min) + min;
+}
+
+let c = new Color(d3.select('body'));

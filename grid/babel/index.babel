@@ -1,0 +1,40 @@
+// D3 version of http://www.openprocessing.org/sketch/157801
+
+const width = 500;
+const height = 500;
+const n = 100;
+let data = [];
+
+let svg = d3.select('#container')
+          .append('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .append('g')
+          .attr("transform", `translate(${width/2}, ${height/2})`);
+          
+for(let x = -n; x < n; x += n/10){
+  for(let y = -n; y <= n; y += n/10){
+    let d = (Math.pow(x, 2) + Math.pow(y, 2))/2;
+    data.push({x: x, y: y, d: d });
+  }
+}
+
+svg.selectAll('circle')
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('cx', d=> d.x)
+    .attr('cy', d=> d.y)
+    .attr('r', 5)
+    .attr('fill', 'rgb(0, 150, 255)');
+
+function update(t){
+  svg.selectAll('circle')
+     .attr("transform", d=>`translate(${d.x}, ${d.y}) rotate(${radians(d.d + t)})`)
+}
+
+d3.timer(update);
+
+function radians(degree){
+  return degree * Math.PI / 180;
+}

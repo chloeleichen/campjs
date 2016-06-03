@@ -1,0 +1,24 @@
+svg{
+  background-color: #000000;
+}
+
+line{
+  stroke-opacity: 0.8;
+  stroke-width: 1.5;
+}
+
+button, input{
+  box-shadow: none;
+  border: 1px solid #dddddd;
+  background: #2c3e50;
+  color: #fff;
+  margin: 5px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  position: absolute;
+  font-family: monospace;
+}
+
+input{
+  right: 0;
+}

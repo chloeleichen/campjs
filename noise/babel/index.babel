@@ -1,0 +1,43 @@
+const width = 600;
+const height = 600;
+const frequency = .001;
+const noiseInterval = Math.PI;
+const n = 50;
+
+let svg = d3.select('#container')
+          .append('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .append('g');
+
+let xScale = d3.scale.linear().domain([-1, 1]).range([0, width]);
+
+let yScale = d3.scale.linear().domain([-1, 1]).range([0, height]);
+
+let colorScale = d3.scale.linear().domain([0, n]).range([100, 360]);
+
+noise.seed(Math.random());
+
+let createAgents = function(t){
+  for(let i = 0;i < n; i ++){
+    let x = xScale(noise.perlin2(i*noiseInterval + t/5 * frequency, i*noiseInterval + t/5 * frequency));
+    let y = yScale(noise.perlin2(i*noiseInterval+1 + t/5 * frequency, i*noiseInterval + 1 + t/5 * frequency));
+    
+    svg.append('circle')
+        .attr('r', 5)
+        .attr('cx', x )
+        .attr('cy', y )
+        .attr('fill-opacity', 0.8)
+        .attr('fill', d3.hsl(colorScale(i), 0.5, 0.5))
+        .transition()
+        .delay(50)
+        .attr('fill-opacity', 0)
+        .attr('r', 0)
+        .each('end', function(){
+          d3.select(this).remove();
+        })
+    }
+}
+ d3.timer(createAgents);
+
+

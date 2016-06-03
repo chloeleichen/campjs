@@ -1,0 +1,15 @@
+html{
+  text-align: center;
+  background: #000;
+}
+
+body{
+  height: 100vh;
+  width: 100vw;
+  min-width: 400px;
+}
+
+rect:hover{
+  fill-opacity: 0.5;
+}
+
